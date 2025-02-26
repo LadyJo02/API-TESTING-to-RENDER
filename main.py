@@ -11,13 +11,18 @@ class Item(BaseModel):
     name: str
     message: str
 
-# File name for CSV storage
-CSV_FILE = "data.csv"
+# Use /tmp/ for storage since Render restricts writing to the root directory
+CSV_FILE = "/tmp/data.csv"
 
 # Initialize CSV file if it does not exist
 if not os.path.exists(CSV_FILE):
     df = pd.DataFrame(columns=["name", "message"])
     df.to_csv(CSV_FILE, index=False)
+
+# Root endpoint to check if API is running
+@app.get("/")
+def root():
+    return {"message": "FastAPI is running!"}
 
 # POST request to receive data
 @app.post("/data")
